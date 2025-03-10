@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="wandernde-kasusmorpheme" class="level2">
 <h2 class="anchored" data-anchor-id="wandernde-kasusmorpheme">Wandernde Kasusmorpheme</h2>
-<p>Dieses Skript dokumentiert die Datenanalyse für eine Nacherhebung von [ART (ADJ) N <em>wegen</em>]-Konstruktionen für den Beitrag “‘Wandernde’ Kasusmorpheme: Variation, Fehler oder Vorboten des Sprachwandels?”. Die restliche Analyse stützt sich auf zuvor getätigte Analysen, die [hier](https://doi.org/10.17605/OSF.IO/AUMG2) im Detail nachzulesen sind.</p>
+<p>Dieses Skript dokumentiert die Datenanalyse für eine Nacherhebung von [ART (ADJ) N <em>wegen</em>]-Konstruktionen für den Beitrag “‘Wandernde’ Kasusmorpheme: Variation, Fehler oder Vorboten des Sprachwandels?”. Die restliche Analyse stützt sich auf zuvor getätigte Analysen, die <a href="https://doi.org/10.17605/OSF.IO/AUMG2">hier</a> im Detail nachzulesen sind.</p>
 </section>
 <section id="vorbereitung" class="level2">
 <h2 class="anchored" data-anchor-id="vorbereitung">Vorbereitung</h2>
@@ -400,7 +400,7 @@ lgl (82): urldomain, tld, ip, sourcecharset, sourcedoctype, bdc, bdv, nbc, n...
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="fu">somers2</span>(s2<span class="sc">$</span>PredFOREST, s2<span class="sc">$</span>s_los_bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          C         Dxy           n     Missing 
-  0.9631027   0.9262055 877.0000000   0.0000000 </code></pre>
+  0.9638087   0.9276174 877.0000000   0.0000000 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">varimp</span>(sforest, <span class="at">conditional =</span> T)</span>
@@ -472,7 +472,7 @@ lgl (82): urldomain, tld, ip, sourcecharset, sourcedoctype, bdc, bdv, nbc, n...
 <span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">somers2</span>(s2<span class="sc">$</span>PredFOREST, s2<span class="sc">$</span>s_los_bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           C          Dxy            n      Missing 
-   0.9275396    0.8550791 1858.0000000    0.0000000 </code></pre>
+   0.9268809    0.8537618 1858.0000000    0.0000000 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">varimp</span>(sforest, <span class="at">conditional =</span> T)</span>
@@ -504,7 +504,7 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># nur mit &gt;10 Belegen:</span></span>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># nur Kasuskategorien mit &gt;10 Belegen:</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qbarplot</span>(<span class="fu">droplevels</span>(<span class="fu">filter</span>(w, keep <span class="sc">==</span> <span class="st">"y"</span> <span class="sc">&amp;</span> position<span class="sc">!=</span><span class="st">"both"</span> <span class="sc">&amp;</span> case <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"gen"</span>, <span class="st">"gen_dat"</span>, <span class="st">"gen_dat_nom_akk"</span>, <span class="st">"nom_akk"</span>, <span class="st">"dat"</span>, <span class="st">"unclear"</span>))), cxn, case,position, <span class="at">wrap100 =</span> T) <span class="sc">+</span> <span class="fu">scale_fill_viridis_d</span>(<span class="at">begin =</span> .<span class="dv">3</span>, <span class="at">end =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Relative Frequenz"</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Konstruktion"</span>) <span class="sc">+</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Kasus"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -517,6 +517,35 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <p><img src="index_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
+</div>
+</div>
+</section>
+<section id="systemumgebung" class="level2">
+<h2 class="anchored" data-anchor-id="systemumgebung">Systemumgebung</h2>
+<p>Systeminfo und Paketversionen zur besseren Reproduzierbarkeit</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.info</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                                           sysname 
+                                                                                          "Darwin" 
+                                                                                           release 
+                                                                                          "24.3.0" 
+                                                                                           version 
+"Darwin Kernel Version 24.3.0: Thu Jan  2 20:22:00 PST 2025; root:xnu-11215.81.4~3/RELEASE_X86_64" 
+                                                                                          nodename 
+                                                                            "Stefan-MBP.fritz.box" 
+                                                                                           machine 
+                                                                                          "x86_64" 
+                                                                                             login 
+                                                                                            "root" 
+                                                                                              user 
+                                                                                  "stefanhartmann" 
+                                                                                    effective_user 
+                                                                                  "stefanhartmann" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">snapshot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>- Lockfile written to "~/sciebo/Projekte/wanderndes_Kasusmorphem/OSF_IDS_Mannheim/renv.lock".</code></pre>
 </div>
 </div>
 </section>

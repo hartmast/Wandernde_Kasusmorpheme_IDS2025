@@ -6,7 +6,7 @@ editor: visual
 
 ## Wandernde Kasusmorpheme
 
-Dieses Skript dokumentiert die Datenanalyse für eine Nacherhebung von \[ART (ADJ) N *wegen*\]-Konstruktionen für den Beitrag "'Wandernde' Kasusmorpheme: Variation, Fehler oder Vorboten des Sprachwandels?". Die restliche Analyse stützt sich auf zuvor getätigte Analysen, die \[hier\](https://doi.org/10.17605/OSF.IO/AUMG2) im Detail nachzulesen sind.
+Dieses Skript dokumentiert die Datenanalyse für eine Nacherhebung von \[ART (ADJ) N *wegen*\]-Konstruktionen für den Beitrag "'Wandernde' Kasusmorpheme: Variation, Fehler oder Vorboten des Sprachwandels?". Die restliche Analyse stützt sich auf zuvor getätigte Analysen, die [hier](https://doi.org/10.17605/OSF.IO/AUMG2) im Detail nachzulesen sind.
 
 ## Vorbereitung
 
@@ -251,4 +251,13 @@ qbarplot(droplevels(filter(w, keep == "y" & position!="both" & case %in% c("gen"
 
 
 
+```
+
+## Systemumgebung
+
+Systeminfo und Paketversionen zur besseren Reproduzierbarkeit
+
+```{r, message=FALSE}
+Sys.info()
+renv::snapshot()
 ```
