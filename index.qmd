@@ -367,7 +367,7 @@ plot(allEffects(m))
 
 ```{r}
 
-w %>% filter(Number=="sg" & Gender %in% c("m", "n") & klasse=="nicht_schwach" & position != "both") %>% qbarplot(cxn, s_less, Position, wrap100 = T) + scale_fill_brewer(palette = "Oranges") +
+w %>% filter(Number=="sg" & Gender %in% c("m", "n") & klasse=="nicht_schwach" & position != "both") %>% mutate(s_los = ifelse(x_less=="y", "ja", "nein")) qbarplot(cxn, s_less, Position, wrap100 = T) + scale_fill_brewer(palette = "Oranges") +
   guides(fill = guide_legend(title = "s-los")) + xlab("Konstruktion") + ylab("Relative Frequenz")
 ggsave("figures/wegen_s_s_los.png") 
 
@@ -394,4 +394,23 @@ Systeminfo und Paketversionen zur besseren Reproduzierbarkeit
 ```{r, message=FALSE}
 Sys.info()
 renv::snapshot()
+```
+
+## Verteilung Migration/Dopplung
+
+```{r}
+
+
+
+w$s_typ <-  case_when(w$cxn=="wegens" & w$Gender %in% c("m", "n") & w$s_less=="y" ~ "Migration",
+          w$cxn=="wegens" & w$Gender %in% c("m", "n") & w$s_less=="n" ~ "Dopplung",
+          w$cxn=="wegens" & w$Gender %in% c("m", "n") & w$s_less=="x" ~ "kein s möglich",
+          w$cxn=="wegens" & w$Gender == "f" & w$s_less=="n" & !is.na(w$s_less) ~ "s unmöglich, aber trotzdem da",
+          w$cxn=="wegens" & w$Gender == "f" & w$s_less=="x" | is.na(w$s_less) ~ "kein s möglich")
+
+
+# Verteilung Migration/Dopplung
+filter(w, cxn=="wegens") %>% mutate(s_typ = factor(s_typ, levels = c("kein s möglich", "Migration", "Dopplung"))) %>% mutate(Position = factor(position, levels = c("pre", "post"))) %>% qbarplot2(Position, s_typ) + ylab("Relative Frequenz") +
+  guides(fill = guide_legend(title = "Typ")) 
+
 ```
