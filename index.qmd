@@ -33,11 +33,13 @@ library(RColorBrewer)
 library(readxl)
 library(patchwork)
 library(ngram)
+library(lme4)
+library(effects)
 
 # Funktion, um schnell Barplots zu erstellen
-qbarplot2 <- function(df, ..., color = c("Blues", F), angle = 0) {
+qbarplot2 <- function(df, ..., color = c("Oranges", F), angle = 0) {
   
-  if(missing(color)) { color = "Blues"  }
+  if(missing(color)) { color = "Oranges"  }
   
   p <- qbarplot(df, cex = 5, ...) + theme_bw() +
     theme(axis.text = element_text(size = 18)) +
@@ -57,8 +59,8 @@ qbarplot2 <- function(df, ..., color = c("Blues", F), angle = 0) {
   }
   
   
-  if(color == "Blues") {
-    p <- p + scale_fill_brewer("Blues")
+  if(color == "Oranges") {
+    p <- p + scale_fill_brewer(palette = "Oranges")
   } else {
     p <- p
   }
@@ -169,7 +171,10 @@ somers2(s2$PredFOREST, s2$s_los_bin)
 
 # variable importance
 vi <- varimp(sforest, conditional = T)
-lattice::dotplot(sort(vi))
+lattice::dotplot(sort(vi), xlab="Conditional variable importance")
+
+
+
 
 
 ```
@@ -234,22 +239,151 @@ lattice::dotplot(sort(vi))
 
 ```
 
+Was passiert, wenn wir das höchstfrequente *Geld* weglassen?
+
+```{r}
+# Subset mit starken Maskulina und Neutra, aber ohne "Geld
+s <- filter(w, lemma != "Geld" & s_less %in% c("y", "n") & case=="gen" & !is.na(Freq))
+
+# convert categorical columns to factors
+cols <- c("s_less", "cxn", "monoref", "forum", "abbreviation", "position")
+s[cols] <- lapply(s[cols], as.factor)
+
+# add binary proper name column
+s$name <- factor(ifelse(s$Proper_name!="n", "y", "n"))
+
+# willen(s)
+s2 <- select(s, s_less, cxn, monoref, name, Freq, pn_or_acro_or_nonnative_in_s, abbreviation, position, Determiner)
+
+# use more intuitive names
+colnames(s2) <- c("s_los", "Variante", "Monoreferenz", "Eigenname", "Frequenz", "Schonungsbedarf_s", "Kurzwort", "Position", "Determinierer")
+
+# replace NAs
+s2 <- replace_na(s2, list(Schonungsbedarf_s = "n"))
+s2$Schonungsbedarf_s <- factor(s2$Schonungsbedarf_s)
+
+# German s-los column
+s2$s_los <- ifelse(s2$s_los=="n", "mit s", "s-los")
+s2$s_los <- factor(s2$s_los, levels = rev(c("s-los", "mit s")))
+
+# log frequency
+s2$LogFreq <- log(s2$Frequenz)
+
+# Determiner as factor
+s2$Determinierer <- factor(s2$Determinierer)
+
+
+# ctree
+stree <- ctree(s_los ~ Variante + Monoreferenz + Position +   
+                 Eigenname + Kurzwort + Schonungsbedarf_s + LogFreq, data = s2)
+
+plot(stree)
+
+
+# random forest
+sforest <- cforest(s_los ~ Variante + Monoreferenz +   
+                 Eigenname + Kurzwort + Schonungsbedarf_s + LogFreq, data = s2)
+
+# get index of concordance - code
+# adapted from Tagliamonte & Baayen 2012
+s2.trp <- treeresponse(sforest)
+s2$PredFOREST <- sapply(s2.trp, FUN = function(v)return(v[2]))
+s2$s_los_bin <- (s2$s_los=="s-los") + 0
+somers2(s2$PredFOREST, s2$s_los_bin)
+
+# variable importance
+vi <- varimp(sforest, conditional = T)
+lattice::dotplot(sort(vi), xlab="Conditional variable importance")
+
+```
+
 ## Kasusverteilung
 
 ```{r}
 
+# Stellung als Faktor mit pre als Basis
+w$Position <- factor(w$position, levels = c("pre", "post"))
+
 w$case <- factor(w$case, levels = c("nom", "gen", "gen_dat", "gen_dat_nom", "gen_nom_akk", "gen_dat_nom_akk", "gen_akk", "nom_akk", "akk", "dat", "dat_akk", "unclear"))
 
 # alle Kasus:
-qbarplot(filter(w, keep == "y" & position!="both"), cxn, case,position, wrap100 = T) + scale_fill_viridis_d(begin = .3, end = .9)
+qbarplot(filter(w, keep == "y" & position!="both"), cxn, case,Position, wrap100 = T) + scale_fill_viridis_d(begin = .3, end = .9) 
 
 # nur Kasuskategorien mit >10 Belegen:
-qbarplot(droplevels(filter(w, keep == "y" & position!="both" & case %in% c("gen", "gen_dat", "gen_dat_nom_akk", "nom_akk", "dat", "unclear"))), cxn, case,position, wrap100 = T) + scale_fill_viridis_d(begin = .3, end = 1) + ylab("Relative Frequenz") + xlab("Konstruktion") +
-  guides(fill = guide_legend(title = "Kasus"))
+qbarplot(droplevels(filter(w, keep == "y" & Position!="both" & case %in% c("gen", "gen_dat", "gen_dat_nom_akk", "nom_akk", "dat", "unclear"))), cxn, case, Position, wrap100 = T) + ylab("Relative Frequenz") + xlab("Konstruktion") +
+  guides(fill = guide_legend(title = "Kasus")) +
+  scale_fill_brewer(palette = "Oranges")
+# ggsave("figures/wegen_s_kasus.png")
+
+# einfaches Regressionsmodell Gen. vs. Dat
+m <- glmer(case ~  Position + (1 | lemma), data = filter(w, case %in% c("gen", "dat")), family = "binomial")
+summary(m)
+
+```
+
+## Genusdistribution
+
+```{r}
+
+# Unterscheidung starke/schwache Maskulina
+w$klasse <- NA
+w[which(w$Gender %in% c("m", "n") & w$s_less=="x" & w$Number=="sg"),]$klasse <- "schwach"
+w[which(is.na(w$klasse)),]$klasse <- "nicht_schwach"
 
 
+# Genus-Spalte mit Unterscheidung zwischen starken und schwachen Nomen
+w$Genus <- ifelse(w$Gender=="m" & w$klasse=="schwach", "Mask. schwach", w$Gender)
+w$Genus <- ifelse(w$Gender=="m" & w$klasse!="schwach", "Mask. stark/gemischt", w$Genus)
+w$Genus <- ifelse(w$Genus=="f", "Femininum", w$Genus)
+w$Genus <- ifelse(w$Genus=="n", "Neutrum", w$Genus)
+
+# plot
+w %>% filter(Number=="sg" & Genus != "x" & position != "both") %>% qbarplot2(cxn, Genus, Position, ylab = "Relative Frequenz", xlab = "Variante", wrap100=T) + 
+  guides(fill = guide_legend(title = "Genus")) +
+  scale_fill_brewer(palette = "Oranges")
+  
+# ggsave("figures/wegens_genusdistribution.png")
 
 
+```
+
+Einfaches Regressionsmodell zur Genusdistribution
+
+```{r}
+
+# binäre Operationalisierung der Genuskategorien
+w$stark_gem_neutr <- ifelse(w$Genus %in% c("Mask. stark/gemischt", "Neutrum"), "y", "n")
+w$stark_gem_neutr <- factor(w$stark_gem_neutr)
+w$cxn_factor <- factor(w$cxn)
+
+# glm
+m <- glm(stark_gem_neutr ~ cxn_factor * Position, data = w, family = "binomial")
+summary(m)
+plot(allEffects(m))
+
+```
+
+## s-lose Genitive
+
+```{r}
+
+w %>% filter(Number=="sg" & Gender %in% c("m", "n") & klasse=="nicht_schwach" & position != "both") %>% qbarplot(cxn, s_less, Position, wrap100 = T) + scale_fill_brewer(palette = "Oranges") +
+  guides(fill = guide_legend(title = "s-los")) + xlab("Konstruktion") + ylab("Relative Frequenz")
+ggsave("figures/wegen_s_s_los.png") 
+
+```
+
+## Hochfrequente Lexeme
+
+Welche Lexeme sind hochfrequent?
+
+```{r}
+
+w$logFreq <- log1p(w$Freq)
+
+w %>% filter(Number=="sg" & Gender %in% c("m", "n") & klasse=="nicht_schwach" & position == "post" & logFreq > 13.883) %>% group_by(lemma) %>% summarise(
+  n = n()
+) %>% arrange(desc(n))
 
 ```
 
