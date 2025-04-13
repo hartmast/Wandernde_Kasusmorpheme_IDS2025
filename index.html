@@ -105,7 +105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Pakete installieren und laden:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CRAN-Pakete installieren</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">c</span>(<span class="st">"data.table"</span>, <span class="st">"tidyverse"</span>, <span class="st">"devtools"</span>, <span class="st">"party"</span>, <span class="st">"Hmisc"</span>, <span class="st">"rms"</span>, <span class="st">"RColorBrewer"</span>, <span class="st">"readxl"</span>, <span class="st">"patchwork"</span>), <span class="cf">function</span>(x) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">c</span>(<span class="st">"data.table"</span>, <span class="st">"tidyverse"</span>, <span class="st">"devtools"</span>, <span class="st">"party"</span>, <span class="st">"Hmisc"</span>, <span class="st">"rms"</span>, <span class="st">"RColorBrewer"</span>, <span class="st">"readxl"</span>, <span class="st">"patchwork"</span>, <span class="st">"grid"</span>, <span class="st">"gridExtra"</span>), <span class="cf">function</span>(x) </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.element</span>(x, <span class="fu">installed.packages</span>())) <span class="fu">install.packages</span>(x, <span class="at">dependencies =</span> T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$data.table
@@ -133,6 +133,12 @@ $readxl
 NULL
 
 $patchwork
+NULL
+
+$grid
+NULL
+
+$gridExtra
 NULL</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nom-CRAN-Paket installieren (falls noch nicht installiert)</span></span>
@@ -256,48 +262,59 @@ The following object is masked from 'package:modeltools':
 lattice theme set by effectsTheme()
 See ?effectsTheme for details.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Funktion, um schnell Barplots zu erstellen</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>qbarplot2 <span class="ot">&lt;-</span> <span class="cf">function</span>(df, ..., <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"Oranges"</span>, F), <span class="at">angle =</span> <span class="dv">0</span>) {</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">missing</span>(color)) { color <span class="ot">=</span> <span class="st">"Oranges"</span>  }</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">qbarplot</span>(df, <span class="at">cex =</span> <span class="dv">5</span>, ...) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>))</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(angle<span class="sc">!=</span><span class="dv">0</span>) {</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> angle, <span class="at">size =</span> <span class="dv">18</span>,<span class="at">hjust =</span> .<span class="dv">9</span>))</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(angle<span class="sc">!=</span><span class="dv">0</span>) {</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>     p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>))</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(color <span class="sc">==</span> <span class="st">"Oranges"</span>) {</span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Oranges"</span>)</span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p</span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'gridExtra'
+
+The following object is masked from 'package:dplyr':
+
+    combine</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Funktion, um schnell Barplots zu erstellen</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>qbarplot2 <span class="ot">&lt;-</span> <span class="cf">function</span>(df, ..., <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"Oranges"</span>, F), <span class="at">angle =</span> <span class="dv">0</span>) {</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">missing</span>(color)) { color <span class="ot">=</span> <span class="st">"Oranges"</span>  }</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">qbarplot</span>(df, <span class="at">cex =</span> <span class="dv">5</span>, ...) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(angle<span class="sc">!=</span><span class="dv">0</span>) {</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> angle, <span class="at">size =</span> <span class="dv">18</span>,<span class="at">hjust =</span> .<span class="dv">9</span>))</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(angle<span class="sc">!=</span><span class="dv">0</span>) {</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>     p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>))</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(color <span class="sc">==</span> <span class="st">"Oranges"</span>) {</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Oranges"</span>)</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="daten-einlesen-data-wrangling" class="level2">
 <h2 class="anchored" data-anchor-id="daten-einlesen-data-wrangling">Daten einlesen &amp; Data Wrangling</h2>
 <p>Hier werden die Daten eingelesen und die zusammengehörigen Datensätze miteinander verknüpft.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Daten einlesen</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># wegens:</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>ws <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"wegens/wegens_DECOW16BX_anno.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Daten einlesen</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># wegens:</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>ws <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"wegens/wegens_DECOW16BX_anno.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 1047 Columns: 114
 ── Column specification ────────────────────────────────────────────────────────
@@ -309,10 +326,10 @@ lgl  (1): short_words
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ws <span class="ot">&lt;-</span> <span class="fu">mutate</span>(ws, <span class="at">cxn =</span> <span class="st">"wegens"</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># wegen ohne s:</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>w0 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"wegens/wegen_sample_DECOW16BX_anno.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ws <span class="ot">&lt;-</span> <span class="fu">mutate</span>(ws, <span class="at">cxn =</span> <span class="st">"wegens"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># wegen ohne s:</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>w0 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"wegens/wegen_sample_DECOW16BX_anno.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 4420 Columns: 114
 ── Column specification ────────────────────────────────────────────────────────
@@ -323,10 +340,10 @@ dbl (77): forum, cliticised_indef_art, genitives, short_words, adj, bdv, nbc...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>w0 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(w0, <span class="at">cxn =</span> <span class="st">"wegen"</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Nacherhebung postnominales wegen:</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>w0p <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"wegens/wegen_postnom_DECOW16A_NANO_filtered.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>w0 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(w0, <span class="at">cxn =</span> <span class="st">"wegen"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Nacherhebung postnominales wegen:</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>w0p <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"wegens/wegen_postnom_DECOW16A_NANO_filtered.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 3222 Columns: 102
 ── Column specification ────────────────────────────────────────────────────────
@@ -338,71 +355,72 @@ lgl (82): urldomain, tld, ip, sourcecharset, sourcedoctype, bdc, bdv, nbc, n...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>w0p <span class="ot">&lt;-</span> <span class="fu">mutate</span>(w0p, <span class="at">cxn =</span> <span class="st">"wegen"</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Spalte Position hinzufügen</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>w0p<span class="sc">$</span>position <span class="ot">&lt;-</span> <span class="st">"post"</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># DATA WRANGLING - wegen(s)</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># relevante Spalten finden</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>mycols <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">colnames</span>(w0), <span class="fu">colnames</span>(w0p))</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co"># zusammenfügen</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">mutate</span>(<span class="fu">select</span>(ws, <span class="fu">all_of</span>(mycols)), <span class="at">cxn =</span> <span class="st">"wegens"</span>),</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="fu">select</span>(w0, <span class="fu">all_of</span>(mycols)), <span class="at">cxn =</span> <span class="st">"wegen"</span>),</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="fu">select</span>(w0p, <span class="fu">all_of</span>(mycols)), <span class="at">cxn =</span> <span class="st">"wegen"</span>))</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co"># nur true positives behalten</span></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">filter</span>(w, keep <span class="sc">==</span> <span class="st">"y"</span>)</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Duplikate entfernen</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> w[<span class="sc">-</span><span class="fu">which</span>(<span class="fu">duplicated</span>(<span class="fu">select</span>(w, Left, Key, Right))),]</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># nur postnominales wegen(s)</span></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>wp <span class="ot">&lt;-</span> <span class="fu">filter</span>(w, position <span class="sc">==</span> <span class="st">"post"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>w0p <span class="ot">&lt;-</span> <span class="fu">mutate</span>(w0p, <span class="at">cxn =</span> <span class="st">"wegen"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Spalte Position hinzufügen</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>w0p<span class="sc">$</span>position <span class="ot">&lt;-</span> <span class="st">"post"</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># DATA WRANGLING - wegen(s)</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># relevante Spalten finden</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>mycols <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">colnames</span>(w0), <span class="fu">colnames</span>(w0p))</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co"># zusammenfügen</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">mutate</span>(<span class="fu">select</span>(ws, <span class="fu">all_of</span>(mycols)), <span class="at">cxn =</span> <span class="st">"wegens"</span>),</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="fu">select</span>(w0, <span class="fu">all_of</span>(mycols)), <span class="at">cxn =</span> <span class="st">"wegen"</span>),</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="fu">select</span>(w0p, <span class="fu">all_of</span>(mycols)), <span class="at">cxn =</span> <span class="st">"wegen"</span>))</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co"># nur true positives behalten</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">filter</span>(w, keep <span class="sc">==</span> <span class="st">"y"</span>)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Duplikate entfernen</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> w[<span class="sc">-</span><span class="fu">which</span>(<span class="fu">duplicated</span>(<span class="fu">select</span>(w, Left, Key, Right))),]</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co"># nur postnominales wegen(s)</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>wp <span class="ot">&lt;-</span> <span class="fu">filter</span>(w, position <span class="sc">==</span> <span class="st">"post"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="random-forest---postnom.-wegens" class="level2">
 <h2 class="anchored" data-anchor-id="random-forest---postnom.-wegens">Random forest - postnom. wegen(s)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset mit starken Maskulina und Neutra</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">filter</span>(wp, s_less <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> case<span class="sc">==</span><span class="st">"gen"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Freq))</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert categorical columns to factors</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_less"</span>, <span class="st">"cxn"</span>, <span class="st">"monoref"</span>, <span class="st">"forum"</span>, <span class="st">"abbreviation"</span>)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>s[cols] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(s[cols], as.factor)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># add binary proper name column</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(s<span class="sc">$</span>Proper_name<span class="sc">!=</span><span class="st">"n"</span>, <span class="st">"y"</span>, <span class="st">"n"</span>))</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># willen(s)</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">select</span>(s, s_less, cxn, monoref, name, Freq, pn_or_acro_or_nonnative_in_s, abbreviation, position, Determiner)</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># use more intuitive names</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(s2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_los"</span>, <span class="st">"Variante"</span>, <span class="st">"Monoreferenz"</span>, <span class="st">"Eigenname"</span>, <span class="st">"Frequenz"</span>, <span class="st">"Schonungsbedarf_s"</span>, <span class="st">"Kurzwort"</span>, <span class="st">"Position"</span>, <span class="st">"Determinierer"</span>)</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># replace NAs</span></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">replace_na</span>(s2, <span class="fu">list</span>(<span class="at">Schonungsbedarf_s =</span> <span class="st">"n"</span>))</span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Schonungsbedarf_s <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Schonungsbedarf_s)</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="co"># German s-los column</span></span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"n"</span>, <span class="st">"mit s"</span>, <span class="st">"s-los"</span>)</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>s_los, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">c</span>(<span class="st">"s-los"</span>, <span class="st">"mit s"</span>)))</span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="co"># log frequency</span></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>LogFreq <span class="ot">&lt;-</span> <span class="fu">log</span>(s2<span class="sc">$</span>Frequenz)</span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Determiner as factor</span></span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Determinierer <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Determinierer)</span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ctree</span></span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>stree <span class="ot">&lt;-</span> <span class="fu">ctree</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span>   </span>
-<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
-<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset mit starken Maskulina und Neutra</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">filter</span>(wp, s_less <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> case<span class="sc">==</span><span class="st">"gen"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Freq))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert categorical columns to factors</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_less"</span>, <span class="st">"cxn"</span>, <span class="st">"monoref"</span>, <span class="st">"forum"</span>, <span class="st">"abbreviation"</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>s[cols] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(s[cols], as.factor)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># add binary proper name column</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(s<span class="sc">$</span>Proper_name<span class="sc">!=</span><span class="st">"n"</span>, <span class="st">"y"</span>, <span class="st">"n"</span>))</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># willen(s)</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">select</span>(s, s_less, cxn, monoref, name, Freq, pn_or_acro_or_nonnative_in_s, abbreviation, position, Determiner)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co"># use more intuitive names</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(s2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_los"</span>, <span class="st">"Variante"</span>, <span class="st">"Monoreferenz"</span>, <span class="st">"Eigenname"</span>, <span class="st">"Frequenz"</span>, <span class="st">"Schonungsbedarf_s"</span>, <span class="st">"Kurzwort"</span>, <span class="st">"Position"</span>, <span class="st">"Determinierer"</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co"># replace NAs</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">replace_na</span>(s2, <span class="fu">list</span>(<span class="at">Schonungsbedarf_s =</span> <span class="st">"n"</span>))</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Schonungsbedarf_s <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Schonungsbedarf_s)</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co"># German s-los column</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"n"</span>, <span class="st">"mit s"</span>, <span class="st">"s-los"</span>)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>s_los, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">c</span>(<span class="st">"s-los"</span>, <span class="st">"mit s"</span>)))</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a><span class="co"># log frequency</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>LogFreq <span class="ot">&lt;-</span> <span class="fu">log</span>(s2<span class="sc">$</span>Frequenz)</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Determiner as factor</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Determinierer <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Determinierer)</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Position <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Position)</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ctree</span></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>stree <span class="ot">&lt;-</span> <span class="fu">ctree</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span>   </span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="co">#png("cit_wegen_s.png", width = 8, height = 5, un = "in", res = 300)</span></span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -410,23 +428,35 @@ lgl (82): urldomain, tld, ip, sourcecharset, sourcedoctype, bdc, bdv, nbc, n...
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># random forest</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>sforest <span class="ot">&lt;-</span> <span class="fu">cforest</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span>   </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># get index of concordance - code</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># adapted from Tagliamonte &amp; Baayen 2012</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>s2.trp <span class="ot">&lt;-</span> <span class="fu">treeresponse</span>(sforest)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>PredFOREST <span class="ot">&lt;-</span> <span class="fu">sapply</span>(s2.trp, <span class="at">FUN =</span> <span class="cf">function</span>(v)<span class="fu">return</span>(v[<span class="dv">2</span>]))</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los_bin <span class="ot">&lt;-</span> (s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"s-los"</span>) <span class="sc">+</span> <span class="dv">0</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">somers2</span>(s2<span class="sc">$</span>PredFOREST, s2<span class="sc">$</span>s_los_bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.off()</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># random forest</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>sforest <span class="ot">&lt;-</span> <span class="fu">cforest</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span>   </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># get index of concordance - code</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># adapted from Tagliamonte &amp; Baayen 2012</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>s2.trp <span class="ot">&lt;-</span> <span class="fu">treeresponse</span>(sforest)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>PredFOREST <span class="ot">&lt;-</span> <span class="fu">sapply</span>(s2.trp, <span class="at">FUN =</span> <span class="cf">function</span>(v)<span class="fu">return</span>(v[<span class="dv">2</span>]))</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los_bin <span class="ot">&lt;-</span> (s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"s-los"</span>) <span class="sc">+</span> <span class="dv">0</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="fu">somers2</span>(s2<span class="sc">$</span>PredFOREST, s2<span class="sc">$</span>s_los_bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          C         Dxy           n     Missing 
-  0.9636904   0.9273808 877.0000000   0.0000000 </code></pre>
+  0.9636561   0.9273121 877.0000000   0.0000000 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">varimp</span>(sforest, <span class="at">conditional =</span> T)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">dotplot</span>(<span class="fu">sort</span>(vi), <span class="at">xlab=</span><span class="st">"Conditional variable importance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">varimp</span>(sforest, <span class="at">conditional =</span> T)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">#png("varimp_wegen_s.png", width =8, height = 5, un = "in", res = 300)</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">dotplot</span>(<span class="fu">sort</span>(vi),</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xlab=</span><span class="fu">list</span>(<span class="at">label=</span><span class="st">"Conditional variable importance"</span>, <span class="at">fontsize=</span><span class="dv">20</span>), <span class="at">scale=</span><span class="fu">list</span>(<span class="at">y=</span><span class="fu">list</span>(<span class="at">cex=</span><span class="dv">2</span>), <span class="at">x =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>), <span class="at">x.title =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)),</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">par.settings =</span> <span class="fu">list</span>(</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)       <span class="co"># Controls axis text</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -434,47 +464,49 @@ lgl (82): urldomain, tld, ip, sourcecharset, sourcedoctype, bdc, bdv, nbc, n...
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#dev.off()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="random-forest---wegens-prä--und-postnom." class="level2">
 <h2 class="anchored" data-anchor-id="random-forest---wegens-prä--und-postnom.">Random forest - wegen(s) prä- und postnom.</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset mit starken Maskulina und Neutra</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">filter</span>(w, s_less <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> case<span class="sc">==</span><span class="st">"gen"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Freq))</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert categorical columns to factors</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_less"</span>, <span class="st">"cxn"</span>, <span class="st">"monoref"</span>, <span class="st">"forum"</span>, <span class="st">"abbreviation"</span>, <span class="st">"position"</span>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>s[cols] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(s[cols], as.factor)</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co"># add binary proper name column</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(s<span class="sc">$</span>Proper_name<span class="sc">!=</span><span class="st">"n"</span>, <span class="st">"y"</span>, <span class="st">"n"</span>))</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co"># willen(s)</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">select</span>(s, s_less, cxn, monoref, name, Freq, pn_or_acro_or_nonnative_in_s, abbreviation, position, Determiner)</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co"># use more intuitive names</span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(s2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_los"</span>, <span class="st">"Variante"</span>, <span class="st">"Monoreferenz"</span>, <span class="st">"Eigenname"</span>, <span class="st">"Frequenz"</span>, <span class="st">"Schonungsbedarf_s"</span>, <span class="st">"Kurzwort"</span>, <span class="st">"Position"</span>, <span class="st">"Determinierer"</span>)</span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co"># replace NAs</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">replace_na</span>(s2, <span class="fu">list</span>(<span class="at">Schonungsbedarf_s =</span> <span class="st">"n"</span>))</span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Schonungsbedarf_s <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Schonungsbedarf_s)</span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="co"># German s-los column</span></span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"n"</span>, <span class="st">"mit s"</span>, <span class="st">"s-los"</span>)</span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>s_los, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">c</span>(<span class="st">"s-los"</span>, <span class="st">"mit s"</span>)))</span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="co"># log frequency</span></span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>LogFreq <span class="ot">&lt;-</span> <span class="fu">log</span>(s2<span class="sc">$</span>Frequenz)</span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Determiner as factor</span></span>
-<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Determinierer <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Determinierer)</span>
-<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ctree</span></span>
-<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>stree <span class="ot">&lt;-</span> <span class="fu">ctree</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span> Position <span class="sc">+</span>   </span>
-<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
-<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset mit starken Maskulina und Neutra</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">filter</span>(w, s_less <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> case<span class="sc">==</span><span class="st">"gen"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Freq))</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert categorical columns to factors</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_less"</span>, <span class="st">"cxn"</span>, <span class="st">"monoref"</span>, <span class="st">"forum"</span>, <span class="st">"abbreviation"</span>, <span class="st">"position"</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>s[cols] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(s[cols], as.factor)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co"># add binary proper name column</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(s<span class="sc">$</span>Proper_name<span class="sc">!=</span><span class="st">"n"</span>, <span class="st">"y"</span>, <span class="st">"n"</span>))</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co"># willen(s)</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">select</span>(s, s_less, cxn, monoref, name, Freq, pn_or_acro_or_nonnative_in_s, abbreviation, position, Determiner)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="co"># use more intuitive names</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(s2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_los"</span>, <span class="st">"Variante"</span>, <span class="st">"Monoreferenz"</span>, <span class="st">"Eigenname"</span>, <span class="st">"Frequenz"</span>, <span class="st">"Schonungsbedarf_s"</span>, <span class="st">"Kurzwort"</span>, <span class="st">"Position"</span>, <span class="st">"Determinierer"</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="co"># replace NAs</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">replace_na</span>(s2, <span class="fu">list</span>(<span class="at">Schonungsbedarf_s =</span> <span class="st">"n"</span>))</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Schonungsbedarf_s <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Schonungsbedarf_s)</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="co"># German s-los column</span></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"n"</span>, <span class="st">"mit s"</span>, <span class="st">"s-los"</span>)</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>s_los, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">c</span>(<span class="st">"s-los"</span>, <span class="st">"mit s"</span>)))</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a><span class="co"># log frequency</span></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>LogFreq <span class="ot">&lt;-</span> <span class="fu">log</span>(s2<span class="sc">$</span>Frequenz)</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Determiner as factor</span></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Determinierer <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Determinierer)</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ctree</span></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>stree2 <span class="ot">&lt;-</span> <span class="fu">ctree</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span> Position <span class="sc">+</span>   </span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a><span class="co"># png("cit_wegen_s_incl_pre.png", width = 6.5, height = 5, un = "in", res = 300)</span></span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stree2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -482,23 +514,16 @@ lgl (82): urldomain, tld, ip, sourcecharset, sourcedoctype, bdc, bdv, nbc, n...
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># random forest</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>sforest <span class="ot">&lt;-</span> <span class="fu">cforest</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span>   </span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># get index of concordance - code</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># adapted from Tagliamonte &amp; Baayen 2012</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>s2.trp <span class="ot">&lt;-</span> <span class="fu">treeresponse</span>(sforest)</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>PredFOREST <span class="ot">&lt;-</span> <span class="fu">sapply</span>(s2.trp, <span class="at">FUN =</span> <span class="cf">function</span>(v)<span class="fu">return</span>(v[<span class="dv">2</span>]))</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los_bin <span class="ot">&lt;-</span> (s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"s-los"</span>) <span class="sc">+</span> <span class="dv">0</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">somers2</span>(s2<span class="sc">$</span>PredFOREST, s2<span class="sc">$</span>s_los_bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>           C          Dxy            n      Missing 
-   0.9273405    0.8546809 1858.0000000    0.0000000 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">varimp</span>(sforest, <span class="at">conditional =</span> T)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">dotplot</span>(<span class="fu">sort</span>(vi))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.off()</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># beide Trees</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">grid.grabExpr</span>(<span class="fu">plot</span>(stree, <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="fu">bold</span>(<span class="st">"nur postnominal"</span>)))))</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">grid.grabExpr</span>(<span class="fu">plot</span>(stree2, <span class="at">main =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="fu">bold</span>(<span class="st">"prä- und postnominal"</span>)))))</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co"># exportieren</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co">#png("cit_wegen_s_incl_excl_pre.png", width = 13, height = 6, units = "in", res = 300)</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(g1, g2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -506,45 +531,110 @@ lgl (82): urldomain, tld, ip, sourcecharset, sourcedoctype, bdc, bdv, nbc, n...
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.off()</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># random forest</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>sforest <span class="ot">&lt;-</span> <span class="fu">cforest</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span>Position<span class="sc">+</span>   </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co"># get index of concordance - code</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co"># adapted from Tagliamonte &amp; Baayen 2012</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>s2.trp <span class="ot">&lt;-</span> <span class="fu">treeresponse</span>(sforest)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>PredFOREST <span class="ot">&lt;-</span> <span class="fu">sapply</span>(s2.trp, <span class="at">FUN =</span> <span class="cf">function</span>(v)<span class="fu">return</span>(v[<span class="dv">2</span>]))</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los_bin <span class="ot">&lt;-</span> (s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"s-los"</span>) <span class="sc">+</span> <span class="dv">0</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="fu">somers2</span>(s2<span class="sc">$</span>PredFOREST, s2<span class="sc">$</span>s_los_bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           C          Dxy            n      Missing 
+   0.9503519    0.9007038 1858.0000000    0.0000000 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>vi2 <span class="ot">&lt;-</span> <span class="fu">varimp</span>(sforest, <span class="at">conditional =</span> T)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># png("varimp_wegen_wegens_incl_pre.png", width = 8, height = 5, un = "in", res = 300)</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">dotplot</span>(<span class="fu">sort</span>(vi2),</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xlab=</span><span class="fu">list</span>(<span class="at">label=</span><span class="st">"Conditional variable importance"</span>, <span class="at">fontsize=</span><span class="dv">20</span>), <span class="at">scale=</span><span class="fu">list</span>(<span class="at">y=</span><span class="fu">list</span>(<span class="at">cex=</span><span class="dv">2</span>), <span class="at">x =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>), <span class="at">x.title =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)),</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">par.settings =</span> <span class="fu">list</span>(</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)       <span class="co"># Controls axis text</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.off()</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>viplot1 <span class="ot">&lt;-</span> lattice<span class="sc">::</span><span class="fu">dotplot</span>(<span class="fu">sort</span>(vi),</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xlab=</span><span class="fu">list</span>(<span class="at">label=</span><span class="st">"Conditional variable importance"</span>, <span class="at">fontsize=</span><span class="dv">20</span>), <span class="at">scale=</span><span class="fu">list</span>(<span class="at">y=</span><span class="fu">list</span>(<span class="at">cex=</span><span class="dv">2</span>), <span class="at">x =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>), <span class="at">x.title =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)),</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">par.settings =</span> <span class="fu">list</span>(</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)       <span class="co"># Controls axis text</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">main =</span> <span class="st">"nur postnominal"</span>)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>viplot2 <span class="ot">&lt;-</span> lattice<span class="sc">::</span><span class="fu">dotplot</span>(<span class="fu">sort</span>(vi2),</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xlab=</span><span class="fu">list</span>(<span class="at">label=</span><span class="st">"Conditional variable importance"</span>, <span class="at">fontsize=</span><span class="dv">20</span>), <span class="at">scale=</span><span class="fu">list</span>(<span class="at">y=</span><span class="fu">list</span>(<span class="at">cex=</span><span class="dv">2</span>), <span class="at">x =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>), <span class="at">x.title =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)),</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">par.settings =</span> <span class="fu">list</span>(</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)       <span class="co"># Controls axis text</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">main =</span> <span class="st">"prä- und postnominal"</span>)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"varimp_wegens_incl_excl_pre.png"</span>, <span class="at">width =</span> <span class="dv">13</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">un =</span> <span class="st">"in"</span>, <span class="at">res =</span> <span class="dv">300</span>)</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(viplot1, viplot2, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+</div>
 </div>
 <p>Was passiert, wenn wir das höchstfrequente <em>Geld</em> weglassen?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset mit starken Maskulina und Neutra, aber ohne "Geld</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">filter</span>(w, lemma <span class="sc">!=</span> <span class="st">"Geld"</span> <span class="sc">&amp;</span> s_less <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> case<span class="sc">==</span><span class="st">"gen"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Freq))</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert categorical columns to factors</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_less"</span>, <span class="st">"cxn"</span>, <span class="st">"monoref"</span>, <span class="st">"forum"</span>, <span class="st">"abbreviation"</span>, <span class="st">"position"</span>)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>s[cols] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(s[cols], as.factor)</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co"># add binary proper name column</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(s<span class="sc">$</span>Proper_name<span class="sc">!=</span><span class="st">"n"</span>, <span class="st">"y"</span>, <span class="st">"n"</span>))</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="co"># willen(s)</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">select</span>(s, s_less, cxn, monoref, name, Freq, pn_or_acro_or_nonnative_in_s, abbreviation, position, Determiner)</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co"># use more intuitive names</span></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(s2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_los"</span>, <span class="st">"Variante"</span>, <span class="st">"Monoreferenz"</span>, <span class="st">"Eigenname"</span>, <span class="st">"Frequenz"</span>, <span class="st">"Schonungsbedarf_s"</span>, <span class="st">"Kurzwort"</span>, <span class="st">"Position"</span>, <span class="st">"Determinierer"</span>)</span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co"># replace NAs</span></span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">replace_na</span>(s2, <span class="fu">list</span>(<span class="at">Schonungsbedarf_s =</span> <span class="st">"n"</span>))</span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Schonungsbedarf_s <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Schonungsbedarf_s)</span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="co"># German s-los column</span></span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"n"</span>, <span class="st">"mit s"</span>, <span class="st">"s-los"</span>)</span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>s_los, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">c</span>(<span class="st">"s-los"</span>, <span class="st">"mit s"</span>)))</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a><span class="co"># log frequency</span></span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>LogFreq <span class="ot">&lt;-</span> <span class="fu">log</span>(s2<span class="sc">$</span>Frequenz)</span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Determiner as factor</span></span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Determinierer <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Determinierer)</span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ctree</span></span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>stree <span class="ot">&lt;-</span> <span class="fu">ctree</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span> Position <span class="sc">+</span>   </span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset mit starken Maskulina und Neutra, aber ohne "Geld</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">filter</span>(w, lemma <span class="sc">!=</span> <span class="st">"Geld"</span> <span class="sc">&amp;</span> s_less <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> case<span class="sc">==</span><span class="st">"gen"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Freq))</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert categorical columns to factors</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_less"</span>, <span class="st">"cxn"</span>, <span class="st">"monoref"</span>, <span class="st">"forum"</span>, <span class="st">"abbreviation"</span>, <span class="st">"position"</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>s[cols] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(s[cols], as.factor)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co"># add binary proper name column</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(s<span class="sc">$</span>Proper_name<span class="sc">!=</span><span class="st">"n"</span>, <span class="st">"y"</span>, <span class="st">"n"</span>))</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co"># willen(s)</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">select</span>(s, s_less, cxn, monoref, name, Freq, pn_or_acro_or_nonnative_in_s, abbreviation, position, Determiner)</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="co"># use more intuitive names</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(s2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"s_los"</span>, <span class="st">"Variante"</span>, <span class="st">"Monoreferenz"</span>, <span class="st">"Eigenname"</span>, <span class="st">"Frequenz"</span>, <span class="st">"Schonungsbedarf_s"</span>, <span class="st">"Kurzwort"</span>, <span class="st">"Position"</span>, <span class="st">"Determinierer"</span>)</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="co"># replace NAs</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">replace_na</span>(s2, <span class="fu">list</span>(<span class="at">Schonungsbedarf_s =</span> <span class="st">"n"</span>))</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Schonungsbedarf_s <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Schonungsbedarf_s)</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a><span class="co"># German s-los column</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"n"</span>, <span class="st">"mit s"</span>, <span class="st">"s-los"</span>)</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>s_los, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">c</span>(<span class="st">"s-los"</span>, <span class="st">"mit s"</span>)))</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a><span class="co"># log frequency</span></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>LogFreq <span class="ot">&lt;-</span> <span class="fu">log</span>(s2<span class="sc">$</span>Frequenz)</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Determiner as factor</span></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>Determinierer <span class="ot">&lt;-</span> <span class="fu">factor</span>(s2<span class="sc">$</span>Determinierer)</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ctree</span></span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>stree <span class="ot">&lt;-</span> <span class="fu">ctree</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span> Position <span class="sc">+</span>   </span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a><span class="co">#png("cit_wegen_s_incl_pre_excl_Geld.png", width = 8, height = 5, un = "in", res = 300)</span></span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -552,44 +642,92 @@ lgl (82): urldomain, tld, ip, sourcecharset, sourcedoctype, bdc, bdv, nbc, n...
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># random forest</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>sforest <span class="ot">&lt;-</span> <span class="fu">cforest</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span>   </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># get index of concordance - code</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co"># adapted from Tagliamonte &amp; Baayen 2012</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>s2.trp <span class="ot">&lt;-</span> <span class="fu">treeresponse</span>(sforest)</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>PredFOREST <span class="ot">&lt;-</span> <span class="fu">sapply</span>(s2.trp, <span class="at">FUN =</span> <span class="cf">function</span>(v)<span class="fu">return</span>(v[<span class="dv">2</span>]))</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los_bin <span class="ot">&lt;-</span> (s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"s-los"</span>) <span class="sc">+</span> <span class="dv">0</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="fu">somers2</span>(s2<span class="sc">$</span>PredFOREST, s2<span class="sc">$</span>s_los_bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#dev.off()</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># random forest</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>sforest <span class="ot">&lt;-</span> <span class="fu">cforest</span>(s_los <span class="sc">~</span> Variante <span class="sc">+</span> Monoreferenz <span class="sc">+</span> Position <span class="sc">+</span>  </span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                 Eigenname <span class="sc">+</span> Kurzwort <span class="sc">+</span> Schonungsbedarf_s <span class="sc">+</span> LogFreq, <span class="at">data =</span> s2)</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co"># get index of concordance - code</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co"># adapted from Tagliamonte &amp; Baayen 2012</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>s2.trp <span class="ot">&lt;-</span> <span class="fu">treeresponse</span>(sforest)</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>PredFOREST <span class="ot">&lt;-</span> <span class="fu">sapply</span>(s2.trp, <span class="at">FUN =</span> <span class="cf">function</span>(v)<span class="fu">return</span>(v[<span class="dv">2</span>]))</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>s2<span class="sc">$</span>s_los_bin <span class="ot">&lt;-</span> (s2<span class="sc">$</span>s_los<span class="sc">==</span><span class="st">"s-los"</span>) <span class="sc">+</span> <span class="dv">0</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="fu">somers2</span>(s2<span class="sc">$</span>PredFOREST, s2<span class="sc">$</span>s_los_bin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           C          Dxy            n      Missing 
-   0.9257172    0.8514344 1720.0000000    0.0000000 </code></pre>
+   0.9524260    0.9048519 1720.0000000    0.0000000 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">varimp</span>(sforest, <span class="at">conditional =</span> T)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">dotplot</span>(<span class="fu">sort</span>(vi), <span class="at">xlab=</span><span class="st">"Conditional variable importance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable importance</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">varimp</span>(sforest, <span class="at">conditional =</span> T)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"varimp_wegen_s_incl_pre_excl_Geld.png"</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">un =</span> <span class="st">"in"</span>, <span class="at">res =</span> <span class="dv">300</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">dotplot</span>(<span class="fu">sort</span>(vi),  <span class="at">xlab=</span><span class="fu">list</span>(<span class="at">label=</span><span class="st">"Conditional variable importance"</span>, <span class="at">fontsize=</span><span class="dv">20</span>), <span class="at">scale=</span><span class="fu">list</span>(<span class="at">y=</span><span class="fu">list</span>(<span class="at">cex=</span><span class="dv">2</span>), <span class="at">x =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>), <span class="at">x.title =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)),</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">par.settings =</span> <span class="fu">list</span>(</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="dv">2</span>)       <span class="co"># Controls axis text</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>quartz_off_screen 
+                2 </code></pre>
 </div>
 </div>
 </section>
 <section id="kasusverteilung" class="level2">
 <h2 class="anchored" data-anchor-id="kasusverteilung">Kasusverteilung</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stellung als Faktor mit pre als Basis</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Position <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>position, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>))</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>case <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>case, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"nom"</span>, <span class="st">"gen"</span>, <span class="st">"gen_dat"</span>, <span class="st">"gen_dat_nom"</span>, <span class="st">"gen_nom_akk"</span>, <span class="st">"gen_dat_nom_akk"</span>, <span class="st">"gen_akk"</span>, <span class="st">"nom_akk"</span>, <span class="st">"akk"</span>, <span class="st">"dat"</span>, <span class="st">"dat_akk"</span>, <span class="st">"unclear"</span>))</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># alle Kasus:</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">qbarplot</span>(<span class="fu">filter</span>(w, keep <span class="sc">==</span> <span class="st">"y"</span> <span class="sc">&amp;</span> position<span class="sc">!=</span><span class="st">"both"</span>), cxn, case,Position, <span class="at">wrap100 =</span> T) <span class="sc">+</span> <span class="fu">scale_fill_viridis_d</span>(<span class="at">begin =</span> .<span class="dv">3</span>, <span class="at">end =</span> .<span class="dv">9</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stellung als Faktor mit pre als Basis</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Position <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>position, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>))</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>case <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>case, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"nom"</span>, <span class="st">"gen"</span>, <span class="st">"gen_dat"</span>, <span class="st">"gen_dat_nom"</span>, <span class="st">"gen_nom_akk"</span>, <span class="st">"gen_dat_nom_akk"</span>, <span class="st">"gen_akk"</span>, <span class="st">"nom_akk"</span>, <span class="st">"akk"</span>, <span class="st">"dat"</span>, <span class="st">"dat_akk"</span>, <span class="st">"unclear"</span>))</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">mutate</span>(w, <span class="at">Kasus =</span> <span class="fu">case_when</span>(case <span class="sc">==</span> <span class="st">"nom"</span> <span class="sc">~</span> <span class="st">"Nominativ"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"gen"</span> <span class="sc">~</span> <span class="st">"Genitiv"</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"gen_dat"</span> <span class="sc">~</span> <span class="st">"Genitiv oder Dativ"</span>,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"gen_dat_nom"</span> <span class="sc">~</span> <span class="st">"Genitiv, Dativ oder Nominativ"</span>,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"gen_dat_nom_akk"</span> <span class="sc">~</span> <span class="st">"Genitiv, Dativ, Nominativ oder Akkusativ"</span>,</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"gen_akk"</span> <span class="sc">~</span> <span class="st">"Genitiv oder Akkusativ"</span>,</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"nom_akk"</span> <span class="sc">~</span> <span class="st">"Nominativ oder Akkusativ"</span>,</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"akk"</span> <span class="sc">~</span> <span class="st">"Akkusativ"</span>,</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"dat"</span> <span class="sc">~</span> <span class="st">"Dativ"</span>,</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"dat_akk"</span> <span class="sc">~</span> <span class="st">"Dativ oder Akkusativ"</span>,</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>                            case <span class="sc">==</span> <span class="st">"unclear"</span> <span class="sc">~</span> <span class="st">"unklar"</span>))</span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Kasus <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>Kasus, <span class="at">levels =</span>  <span class="fu">c</span>(<span class="st">"Nominativ"</span>,</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a> <span class="st">"Genitiv"</span>,</span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a> <span class="st">"Genitiv oder Dativ"</span>,</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a> <span class="st">"Genitiv, Dativ oder Nominativ"</span>,</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a> <span class="st">"Genitiv, Dativ, Nominativ oder Akkusativ"</span>,</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a> <span class="st">"Genitiv oder Akkusativ"</span>,</span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a> <span class="st">"Nominativ oder Akkusativ"</span>,</span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a> <span class="st">"Akkusativ"</span>,</span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a> <span class="st">"Dativ"</span>,</span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a> <span class="st">"Dativ oder Akkusativ"</span>,</span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a> <span class="st">"unklar"</span>))</span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> w <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Stellung =</span> <span class="fu">case_when</span>(position<span class="sc">==</span><span class="st">"pre"</span> <span class="sc">~</span> <span class="st">"präponiert"</span>,</span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>                                  position<span class="sc">==</span><span class="st">"post"</span> <span class="sc">~</span><span class="st">"postponiert"</span>))</span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Stellung <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>Stellung, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"präponiert"</span>, <span class="st">"postponiert"</span>))</span>
+<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-35"><a href="#cb44-35" aria-hidden="true" tabindex="-1"></a><span class="co"># alle Kasus:</span></span>
+<span id="cb44-36"><a href="#cb44-36" aria-hidden="true" tabindex="-1"></a><span class="fu">qbarplot</span>(<span class="fu">filter</span>(w, keep <span class="sc">==</span> <span class="st">"y"</span> <span class="sc">&amp;</span> position<span class="sc">!=</span><span class="st">"both"</span>), cxn, Kasus,Stellung, <span class="at">wrap100 =</span> T) <span class="sc">+</span> <span class="fu">scale_fill_viridis_d</span>(<span class="at">begin =</span> .<span class="dv">3</span>, <span class="at">end =</span> .<span class="dv">9</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Relative Frequenz"</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Konstruktion"</span>) <span class="sc">+</span></span>
+<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Kasus"</span>)) <span class="sc">+</span></span>
+<span id="cb44-38"><a href="#cb44-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">begin =</span> .<span class="dv">2</span>, <span class="at">end =</span> .<span class="dv">8</span>) <span class="sc">+</span></span>
+<span id="cb44-39"><a href="#cb44-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb44-40"><a href="#cb44-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb44-41"><a href="#cb44-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb44-42"><a href="#cb44-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb44-43"><a href="#cb44-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
+<span id="cb44-44"><a href="#cb44-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.
+Scale for fill is already present.
 Adding another scale for fill, which will replace the existing scale.</code></pre>
 </div>
 <div class="cell-output-display">
@@ -599,10 +737,16 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># nur Kasuskategorien mit &gt;10 Belegen:</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qbarplot</span>(<span class="fu">droplevels</span>(<span class="fu">filter</span>(w, keep <span class="sc">==</span> <span class="st">"y"</span> <span class="sc">&amp;</span> Position<span class="sc">!=</span><span class="st">"both"</span> <span class="sc">&amp;</span> case <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"gen"</span>, <span class="st">"gen_dat"</span>, <span class="st">"gen_dat_nom_akk"</span>, <span class="st">"nom_akk"</span>, <span class="st">"dat"</span>, <span class="st">"unclear"</span>))), cxn, case, Position, <span class="at">wrap100 =</span> T) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Relative Frequenz"</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Konstruktion"</span>) <span class="sc">+</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Kasus"</span>)) <span class="sc">+</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Oranges"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># nur Kasuskategorien mit &gt;10 Belegen:</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qbarplot</span>(<span class="fu">droplevels</span>(<span class="fu">filter</span>(w, keep <span class="sc">==</span> <span class="st">"y"</span> <span class="sc">&amp;</span> Position<span class="sc">!=</span><span class="st">"both"</span> <span class="sc">&amp;</span> case <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"gen"</span>, <span class="st">"gen_dat"</span>, <span class="st">"gen_dat_nom_akk"</span>, <span class="st">"nom_akk"</span>, <span class="st">"dat"</span>, <span class="st">"unclear"</span>))), cxn, Kasus, Stellung, <span class="at">wrap100 =</span> T) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Relative Frequenz"</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Konstruktion"</span>) <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Kasus"</span>)) <span class="sc">+</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Oranges"</span>) <span class="sc">+</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for fill is already present.
 Adding another scale for fill, which will replace the existing scale.</code></pre>
@@ -614,11 +758,11 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggsave("figures/wegen_s_kasus.png")</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># einfaches Regressionsmodell Gen. vs. Dat</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glmer</span>(case <span class="sc">~</span>  Position <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> lemma), <span class="at">data =</span> <span class="fu">filter</span>(w, case <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"gen"</span>, <span class="st">"dat"</span>)), <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggsave("figures/wegen_s_kasus_10plus.png", width = 12, height = 7)</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># einfaches Regressionsmodell Gen. vs. Dat</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glmer</span>(case <span class="sc">~</span>  Position <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> lemma), <span class="at">data =</span> <span class="fu">filter</span>(w, case <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"gen"</span>, <span class="st">"dat"</span>)), <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
@@ -654,22 +798,22 @@ Positionpst 0.040 </code></pre>
 <section id="genusdistribution" class="level2">
 <h2 class="anchored" data-anchor-id="genusdistribution">Genusdistribution</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Unterscheidung starke/schwache Maskulina</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>klasse <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>w[<span class="fu">which</span>(w<span class="sc">$</span>Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> w<span class="sc">$</span>s_less<span class="sc">==</span><span class="st">"x"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>Number<span class="sc">==</span><span class="st">"sg"</span>),]<span class="sc">$</span>klasse <span class="ot">&lt;-</span> <span class="st">"schwach"</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>w[<span class="fu">which</span>(<span class="fu">is.na</span>(w<span class="sc">$</span>klasse)),]<span class="sc">$</span>klasse <span class="ot">&lt;-</span> <span class="st">"nicht_schwach"</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Genus-Spalte mit Unterscheidung zwischen starken und schwachen Nomen</span></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Genus <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Gender<span class="sc">==</span><span class="st">"m"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>klasse<span class="sc">==</span><span class="st">"schwach"</span>, <span class="st">"Mask. schwach"</span>, w<span class="sc">$</span>Gender)</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Genus <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Gender<span class="sc">==</span><span class="st">"m"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>klasse<span class="sc">!=</span><span class="st">"schwach"</span>, <span class="st">"Mask. stark/gemischt"</span>, w<span class="sc">$</span>Genus)</span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Genus <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Genus<span class="sc">==</span><span class="st">"f"</span>, <span class="st">"Femininum"</span>, w<span class="sc">$</span>Genus)</span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Genus <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Genus<span class="sc">==</span><span class="st">"n"</span>, <span class="st">"Neutrum"</span>, w<span class="sc">$</span>Genus)</span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>w <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Number<span class="sc">==</span><span class="st">"sg"</span> <span class="sc">&amp;</span> Genus <span class="sc">!=</span> <span class="st">"x"</span> <span class="sc">&amp;</span> position <span class="sc">!=</span> <span class="st">"both"</span>) <span class="sc">%&gt;%</span> <span class="fu">qbarplot2</span>(cxn, Genus, Position, <span class="at">ylab =</span> <span class="st">"Relative Frequenz"</span>, <span class="at">xlab =</span> <span class="st">"Variante"</span>, <span class="at">wrap100=</span>T) <span class="sc">+</span> </span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Genus"</span>)) <span class="sc">+</span></span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Oranges"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Unterscheidung starke/schwache Maskulina</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>klasse <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>w[<span class="fu">which</span>(w<span class="sc">$</span>Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> w<span class="sc">$</span>s_less<span class="sc">==</span><span class="st">"x"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>Number<span class="sc">==</span><span class="st">"sg"</span>),]<span class="sc">$</span>klasse <span class="ot">&lt;-</span> <span class="st">"schwach"</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>w[<span class="fu">which</span>(<span class="fu">is.na</span>(w<span class="sc">$</span>klasse)),]<span class="sc">$</span>klasse <span class="ot">&lt;-</span> <span class="st">"nicht_schwach"</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Genus-Spalte mit Unterscheidung zwischen starken und schwachen Nomen</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Genus <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Gender<span class="sc">==</span><span class="st">"m"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>klasse<span class="sc">==</span><span class="st">"schwach"</span>, <span class="st">"Mask. schwach"</span>, w<span class="sc">$</span>Gender)</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Genus <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Gender<span class="sc">==</span><span class="st">"m"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>klasse<span class="sc">!=</span><span class="st">"schwach"</span>, <span class="st">"Mask. stark/gemischt"</span>, w<span class="sc">$</span>Genus)</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Genus <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Genus<span class="sc">==</span><span class="st">"f"</span>, <span class="st">"Femininum"</span>, w<span class="sc">$</span>Genus)</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>Genus <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Genus<span class="sc">==</span><span class="st">"n"</span>, <span class="st">"Neutrum"</span>, w<span class="sc">$</span>Genus)</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>w <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Number<span class="sc">==</span><span class="st">"sg"</span> <span class="sc">&amp;</span> Genus <span class="sc">!=</span> <span class="st">"x"</span> <span class="sc">&amp;</span> position <span class="sc">!=</span> <span class="st">"both"</span>) <span class="sc">%&gt;%</span> <span class="fu">qbarplot2</span>(cxn, Genus, Stellung, <span class="at">ylab =</span> <span class="st">"Relative Frequenz"</span>, <span class="at">xlab =</span> <span class="st">"Variante"</span>, <span class="at">wrap100=</span>T) <span class="sc">+</span> </span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Genus"</span>)) <span class="sc">+</span></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Oranges"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for fill is already present.
 Adding another scale for fill, which will replace the existing scale.
@@ -683,18 +827,18 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggsave("figures/wegens_genusdistribution.png")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggsave("figures/wegens_genusdistribution.png")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Einfaches Regressionsmodell zur Genusdistribution</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># binäre Operationalisierung der Genuskategorien</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>stark_gem_neutr <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Genus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Mask. stark/gemischt"</span>, <span class="st">"Neutrum"</span>), <span class="st">"y"</span>, <span class="st">"n"</span>)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>stark_gem_neutr <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>stark_gem_neutr)</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>cxn_factor <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>cxn)</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="co"># glm</span></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(stark_gem_neutr <span class="sc">~</span> cxn_factor <span class="sc">*</span> Position, <span class="at">data =</span> w, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># binäre Operationalisierung der Genuskategorien</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>stark_gem_neutr <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(w<span class="sc">$</span>Genus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Mask. stark/gemischt"</span>, <span class="st">"Neutrum"</span>), <span class="st">"y"</span>, <span class="st">"n"</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>stark_gem_neutr <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>stark_gem_neutr)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>cxn_factor <span class="ot">&lt;-</span> <span class="fu">factor</span>(w<span class="sc">$</span>cxn)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="co"># glm</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(stark_gem_neutr <span class="sc">~</span> cxn_factor <span class="sc">*</span> Position, <span class="at">data =</span> w, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -719,7 +863,7 @@ AIC: 9639.3
 
 Number of Fisher Scoring iterations: 4</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">allEffects</span>(m))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">allEffects</span>(m))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -732,8 +876,8 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <section id="s-lose-genitive" class="level2">
 <h2 class="anchored" data-anchor-id="s-lose-genitive">s-lose Genitive</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>w <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Number<span class="sc">==</span><span class="st">"sg"</span> <span class="sc">&amp;</span> Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> klasse<span class="sc">==</span><span class="st">"nicht_schwach"</span> <span class="sc">&amp;</span> position <span class="sc">!=</span> <span class="st">"both"</span>) <span class="sc">%&gt;%</span> <span class="fu">qbarplot</span>(cxn, s_less, Position, <span class="at">wrap100 =</span> T) <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Oranges"</span>) <span class="sc">+</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"s-los"</span>)) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Konstruktion"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Relative Frequenz"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>w <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Number<span class="sc">==</span><span class="st">"sg"</span> <span class="sc">&amp;</span> Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> klasse<span class="sc">==</span><span class="st">"nicht_schwach"</span> <span class="sc">&amp;</span> position <span class="sc">!=</span> <span class="st">"both"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">s_los =</span> <span class="fu">ifelse</span>(s_less<span class="sc">==</span><span class="st">"y"</span>, <span class="st">"ja"</span>, <span class="st">"nein"</span>)) <span class="sc">%&gt;%</span> <span class="fu">qbarplot</span>(cxn, s_los, Position, <span class="at">wrap100 =</span> T) <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Oranges"</span>) <span class="sc">+</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"s-los"</span>)) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Konstruktion"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Relative Frequenz"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for fill is already present.
 Adding another scale for fill, which will replace the existing scale.</code></pre>
@@ -745,21 +889,18 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"figures/wegen_s_s_los.png"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Saving 7 x 5 in image</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggsave("figures/wegen_s_s_los.png") </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="hochfrequente-lexeme" class="level2">
 <h2 class="anchored" data-anchor-id="hochfrequente-lexeme">Hochfrequente Lexeme</h2>
 <p>Welche Lexeme sind hochfrequent?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>logFreq <span class="ot">&lt;-</span> <span class="fu">log1p</span>(w<span class="sc">$</span>Freq)</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>w <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Number<span class="sc">==</span><span class="st">"sg"</span> <span class="sc">&amp;</span> Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> klasse<span class="sc">==</span><span class="st">"nicht_schwach"</span> <span class="sc">&amp;</span> position <span class="sc">==</span> <span class="st">"post"</span> <span class="sc">&amp;</span> logFreq <span class="sc">&gt;</span> <span class="fl">13.883</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(lemma) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">n</span>()</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>logFreq <span class="ot">&lt;-</span> <span class="fu">log1p</span>(w<span class="sc">$</span>Freq)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>w <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Number<span class="sc">==</span><span class="st">"sg"</span> <span class="sc">&amp;</span> Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> klasse<span class="sc">==</span><span class="st">"nicht_schwach"</span> <span class="sc">&amp;</span> position <span class="sc">==</span> <span class="st">"post"</span> <span class="sc">&amp;</span> logFreq <span class="sc">&gt;</span> <span class="fl">13.883</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(lemma) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 62 × 2
    lemma         n
@@ -782,68 +923,77 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <h2 class="anchored" data-anchor-id="systemumgebung">Systemumgebung</h2>
 <p>Systeminfo und Paketversionen zur besseren Reproduzierbarkeit</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.info</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.info</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                                                                                           sysname 
-                                                                                          "Darwin" 
-                                                                                           release 
-                                                                                          "24.3.0" 
-                                                                                           version 
-"Darwin Kernel Version 24.3.0: Thu Jan  2 20:22:00 PST 2025; root:xnu-11215.81.4~3/RELEASE_X86_64" 
-                                                                                          nodename 
-                                                                                "Stefan-MBP.local" 
-                                                                                           machine 
-                                                                                          "x86_64" 
-                                                                                             login 
-                                                                                            "root" 
-                                                                                              user 
-                                                                                  "stefanhartmann" 
-                                                                                    effective_user 
-                                                                                  "stefanhartmann" </code></pre>
+<pre><code>                                                                                             sysname 
+                                                                                            "Darwin" 
+                                                                                             release 
+                                                                                            "24.4.0" 
+                                                                                             version 
+"Darwin Kernel Version 24.4.0: Wed Mar 19 21:16:31 PDT 2025; root:xnu-11417.101.15~1/RELEASE_X86_64" 
+                                                                                            nodename 
+                                                                                  "Stefan-MBP.local" 
+                                                                                             machine 
+                                                                                            "x86_64" 
+                                                                                               login 
+                                                                                              "root" 
+                                                                                                user 
+                                                                                    "stefanhartmann" 
+                                                                                      effective_user 
+                                                                                    "stefanhartmann" </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">snapshot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">snapshot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>The following package(s) will be updated in the lockfile:
-
-# CRAN -----------------------------------------------------------------------
-- abind            [* -&gt; 1.4-8]
-- boot             [* -&gt; 1.3-31]
-- car              [* -&gt; 3.1-2]
-- carData          [* -&gt; 3.0-5]
-- cowplot          [* -&gt; 1.1.3]
-- crosstalk        [* -&gt; 1.2.1]
-- Deriv            [* -&gt; 4.1.3]
-- doBy             [* -&gt; 4.6.22]
-- DT               [* -&gt; 0.33]
-- effects          [* -&gt; 4.2-2]
-- ellipse          [* -&gt; 0.5.0]
-- emmeans          [* -&gt; 1.10.3]
-- estimability     [* -&gt; 1.5.1]
-- explor           [* -&gt; 0.3.10]
-- FactoMineR       [* -&gt; 2.11]
-- flashClust       [* -&gt; 1.01-2]
-- formatR          [* -&gt; 1.14]
-- ggrepel          [* -&gt; 0.9.6]
-- insight          [* -&gt; 1.0.0]
-- lazyeval         [* -&gt; 0.2.2]
-- leaps            [* -&gt; 3.2]
-- lme4             [* -&gt; 1.1-35.4]
-- microbenchmark   [* -&gt; 1.4.10]
-- minqa            [* -&gt; 1.2.7]
-- mitools          [* -&gt; 2.4]
-- mnormt           [* -&gt; 2.1.1]
-- multcompView     [* -&gt; 0.1-10]
-- nloptr           [* -&gt; 2.1.0]
-- numDeriv         [* -&gt; 2016.8-1.1]
-- pbkrtest         [* -&gt; 0.5.3]
-- psych            [* -&gt; 2.4.3]
-- RcppArmadillo    [* -&gt; 0.12.8.4.0]
-- RcppEigen        [* -&gt; 0.3.4.0.2]
-- scatterD3        [* -&gt; 1.0.1]
-- scatterplot3d    [* -&gt; 0.3-44]
-- survey           [* -&gt; 4.4-2]
-
-- Lockfile written to "~/sciebo/Projekte/wanderndes_Kasusmorphem/OSF_IDS_Mannheim/renv.lock".</code></pre>
+<pre><code>- Lockfile written to "~/sciebo/Projekte/wanderndes_Kasusmorphem/OSF_IDS_Mannheim/renv.lock".</code></pre>
+</div>
+</div>
+</section>
+<section id="verteilung-migrationdopplung" class="level2">
+<h2 class="anchored" data-anchor-id="verteilung-migrationdopplung">Verteilung Migration/Dopplung</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>s_typ <span class="ot">&lt;-</span>  <span class="fu">case_when</span>(w<span class="sc">$</span>cxn<span class="sc">==</span><span class="st">"wegens"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> w<span class="sc">$</span>s_less<span class="sc">==</span><span class="st">"y"</span> <span class="sc">~</span> <span class="st">"Migration"</span>,</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>          w<span class="sc">$</span>cxn<span class="sc">==</span><span class="st">"wegens"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> w<span class="sc">$</span>s_less<span class="sc">==</span><span class="st">"n"</span> <span class="sc">~</span> <span class="st">"Dopplung"</span>,</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>          w<span class="sc">$</span>cxn<span class="sc">==</span><span class="st">"wegens"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>Gender <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"m"</span>, <span class="st">"n"</span>) <span class="sc">&amp;</span> w<span class="sc">$</span>s_less<span class="sc">==</span><span class="st">"x"</span> <span class="sc">~</span> <span class="st">"kein s möglich"</span>,</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>          w<span class="sc">$</span>cxn<span class="sc">==</span><span class="st">"wegens"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>Gender <span class="sc">==</span> <span class="st">"f"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>s_less<span class="sc">==</span><span class="st">"n"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(w<span class="sc">$</span>s_less) <span class="sc">~</span> <span class="st">"s unmöglich, aber trotzdem da"</span>,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>          w<span class="sc">$</span>cxn<span class="sc">==</span><span class="st">"wegens"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>Gender <span class="sc">==</span> <span class="st">"f"</span> <span class="sc">&amp;</span> w<span class="sc">$</span>s_less<span class="sc">==</span><span class="st">"x"</span> <span class="sc">|</span> <span class="fu">is.na</span>(w<span class="sc">$</span>s_less) <span class="sc">~</span> <span class="st">"kein s möglich"</span>)</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Verteilung Migration/Dopplung</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(w, cxn<span class="sc">==</span><span class="st">"wegens"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">s_typ =</span> <span class="fu">factor</span>(s_typ, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"kein s möglich"</span>, <span class="st">"Migration"</span>, <span class="st">"Dopplung"</span>))) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Position =</span> <span class="fu">factor</span>(position, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>))) <span class="sc">%&gt;%</span> <span class="fu">qbarplot2</span>(Position, s_typ) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Relative Frequenz"</span>) <span class="sc">+</span></span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Typ"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exploration-der-lemmaswortformen" class="level2">
+<h2 class="anchored" data-anchor-id="exploration-der-lemmaswortformen">Exploration der Lemmas/Wortformen</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>w<span class="sc">$</span>endet_mit_en <span class="ot">&lt;-</span> <span class="fu">grepl</span>(<span class="st">".*en$"</span>, w<span class="sc">$</span>lemma)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qbarplot</span>(w, cxn, endet_mit_en, Position, <span class="at">wrap100=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>w <span class="sc">%&gt;%</span> <span class="fu">select</span>(cxn, endet_mit_en, Position, lemma) <span class="sc">%&gt;%</span> <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="fu">qbarplot</span>(cxn, endet_mit_en, Position, <span class="at">wrap100=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>

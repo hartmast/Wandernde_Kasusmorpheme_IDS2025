@@ -14,7 +14,7 @@ Pakete installieren und laden:
 
 ```{r}
 # CRAN-Pakete installieren
-sapply(c("data.table", "tidyverse", "devtools", "party", "Hmisc", "rms", "RColorBrewer", "readxl", "patchwork"), function(x) 
+sapply(c("data.table", "tidyverse", "devtools", "party", "Hmisc", "rms", "RColorBrewer", "readxl", "patchwork", "grid", "gridExtra"), function(x) 
   if(!is.element(x, installed.packages())) install.packages(x, dependencies = T))
 
 # Nom-CRAN-Paket installieren (falls noch nicht installiert)
@@ -35,6 +35,8 @@ library(patchwork)
 library(ngram)
 library(lme4)
 library(effects)
+library(gridExtra)
+library(grid)
 
 # Funktion, um schnell Barplots zu erstellen
 qbarplot2 <- function(df, ..., color = c("Oranges", F), angle = 0) {
@@ -149,13 +151,16 @@ s2$LogFreq <- log(s2$Frequenz)
 
 # Determiner as factor
 s2$Determinierer <- factor(s2$Determinierer)
-
+s2$Position <- factor(s2$Position)
 
 # ctree
 stree <- ctree(s_los ~ Variante + Monoreferenz +   
                  Eigenname + Kurzwort + Schonungsbedarf_s + LogFreq, data = s2)
 
+#png("cit_wegen_s.png", width = 8, height = 5, un = "in", res = 300)
 plot(stree)
+# dev.off()
+
 
 
 # random forest
@@ -171,9 +176,16 @@ somers2(s2$PredFOREST, s2$s_los_bin)
 
 # variable importance
 vi <- varimp(sforest, conditional = T)
-lattice::dotplot(sort(vi), xlab="Conditional variable importance")
 
+#png("varimp_wegen_s.png", width =8, height = 5, un = "in", res = 300)
 
+lattice::dotplot(sort(vi),
+                 xlab=list(label="Conditional variable importance", fontsize=20), scale=list(y=list(cex=2), x = list(cex = 2), x.title = list(cex = 2)),
+                   par.settings = list(
+    axis.text = list(cex = 2)       # Controls axis text
+
+  ))
+#dev.off()
 
 
 
@@ -215,14 +227,29 @@ s2$Determinierer <- factor(s2$Determinierer)
 
 
 # ctree
-stree <- ctree(s_los ~ Variante + Monoreferenz + Position +   
+stree2 <- ctree(s_los ~ Variante + Monoreferenz + Position +   
                  Eigenname + Kurzwort + Schonungsbedarf_s + LogFreq, data = s2)
 
-plot(stree)
+# png("cit_wegen_s_incl_pre.png", width = 6.5, height = 5, un = "in", res = 300)
+plot(stree2)
+# dev.off()
+
+# beide Trees
+
+g1 <- grid.grabExpr(plot(stree, main = expression(paste(bold("nur postnominal")))))
+g2 <- grid.grabExpr(plot(stree2, main = expression(paste(bold("prä- und postnominal")))))
+
+# exportieren
+#png("cit_wegen_s_incl_excl_pre.png", width = 13, height = 6, units = "in", res = 300)
+grid.arrange(g1, g2, ncol = 2)
+# dev.off()
+
+
+
 
 
 # random forest
-sforest <- cforest(s_los ~ Variante + Monoreferenz +   
+sforest <- cforest(s_los ~ Variante + Monoreferenz +Position+   
                  Eigenname + Kurzwort + Schonungsbedarf_s + LogFreq, data = s2)
 
 # get index of concordance - code
@@ -233,8 +260,38 @@ s2$s_los_bin <- (s2$s_los=="s-los") + 0
 somers2(s2$PredFOREST, s2$s_los_bin)
 
 # variable importance
-vi <- varimp(sforest, conditional = T)
-lattice::dotplot(sort(vi))
+vi2 <- varimp(sforest, conditional = T)
+
+# png("varimp_wegen_wegens_incl_pre.png", width = 8, height = 5, un = "in", res = 300)
+lattice::dotplot(sort(vi2),
+                 xlab=list(label="Conditional variable importance", fontsize=20), scale=list(y=list(cex=2), x = list(cex = 2), x.title = list(cex = 2)),
+                   par.settings = list(
+    axis.text = list(cex = 2)       # Controls axis text
+
+  ))
+# dev.off()
+
+
+
+
+viplot1 <- lattice::dotplot(sort(vi),
+                 xlab=list(label="Conditional variable importance", fontsize=20), scale=list(y=list(cex=2), x = list(cex = 2), x.title = list(cex = 2)),
+                   par.settings = list(
+    axis.text = list(cex = 2)       # Controls axis text
+
+  ), main = "nur postnominal")
+
+
+viplot2 <- lattice::dotplot(sort(vi2),
+                 xlab=list(label="Conditional variable importance", fontsize=20), scale=list(y=list(cex=2), x = list(cex = 2), x.title = list(cex = 2)),
+                   par.settings = list(
+    axis.text = list(cex = 2)       # Controls axis text
+
+  ), main = "prä- und postnominal")
+
+# png("varimp_wegens_incl_excl_pre.png", width = 13, height = 6, un = "in", res = 300)
+grid.arrange(viplot1, viplot2, ncol = 2)
+# dev.off()
 
 
 ```
@@ -277,11 +334,15 @@ s2$Determinierer <- factor(s2$Determinierer)
 stree <- ctree(s_los ~ Variante + Monoreferenz + Position +   
                  Eigenname + Kurzwort + Schonungsbedarf_s + LogFreq, data = s2)
 
+#png("cit_wegen_s_incl_pre_excl_Geld.png", width = 8, height = 5, un = "in", res = 300)
 plot(stree)
+#dev.off()
+
+
 
 
 # random forest
-sforest <- cforest(s_los ~ Variante + Monoreferenz +   
+sforest <- cforest(s_los ~ Variante + Monoreferenz + Position +  
                  Eigenname + Kurzwort + Schonungsbedarf_s + LogFreq, data = s2)
 
 # get index of concordance - code
@@ -293,7 +354,14 @@ somers2(s2$PredFOREST, s2$s_los_bin)
 
 # variable importance
 vi <- varimp(sforest, conditional = T)
-lattice::dotplot(sort(vi), xlab="Conditional variable importance")
+
+png("varimp_wegen_s_incl_pre_excl_Geld.png", width = 8, height = 5, un = "in", res = 300)
+lattice::dotplot(sort(vi),  xlab=list(label="Conditional variable importance", fontsize=20), scale=list(y=list(cex=2), x = list(cex = 2), x.title = list(cex = 2)),
+                   par.settings = list(
+    axis.text = list(cex = 2)       # Controls axis text
+
+  ))
+dev.off()
 
 ```
 
@@ -306,14 +374,58 @@ w$Position <- factor(w$position, levels = c("pre", "post"))
 
 w$case <- factor(w$case, levels = c("nom", "gen", "gen_dat", "gen_dat_nom", "gen_nom_akk", "gen_dat_nom_akk", "gen_akk", "nom_akk", "akk", "dat", "dat_akk", "unclear"))
 
+w <- mutate(w, Kasus = case_when(case == "nom" ~ "Nominativ",
+                            case == "gen" ~ "Genitiv",
+                            case == "gen_dat" ~ "Genitiv oder Dativ",
+                            case == "gen_dat_nom" ~ "Genitiv, Dativ oder Nominativ",
+                            case == "gen_dat_nom_akk" ~ "Genitiv, Dativ, Nominativ oder Akkusativ",
+                            case == "gen_akk" ~ "Genitiv oder Akkusativ",
+                            case == "nom_akk" ~ "Nominativ oder Akkusativ",
+                            case == "akk" ~ "Akkusativ",
+                            case == "dat" ~ "Dativ",
+                            case == "dat_akk" ~ "Dativ oder Akkusativ",
+                            case == "unclear" ~ "unklar"))
+
+w$Kasus <- factor(w$Kasus, levels =  c("Nominativ",
+ "Genitiv",
+ "Genitiv oder Dativ",
+ "Genitiv, Dativ oder Nominativ",
+ "Genitiv, Dativ, Nominativ oder Akkusativ",
+ "Genitiv oder Akkusativ",
+ "Nominativ oder Akkusativ",
+ "Akkusativ",
+ "Dativ",
+ "Dativ oder Akkusativ",
+ "unklar"))
+
+w <- w %>% mutate(Stellung = case_when(position=="pre" ~ "präponiert",
+                                  position=="post" ~"postponiert"))
+
+w$Stellung <- factor(w$Stellung, levels = c("präponiert", "postponiert"))
+
 # alle Kasus:
-qbarplot(filter(w, keep == "y" & position!="both"), cxn, case,Position, wrap100 = T) + scale_fill_viridis_d(begin = .3, end = .9) 
+qbarplot(filter(w, keep == "y" & position!="both"), cxn, Kasus,Stellung, wrap100 = T) + scale_fill_viridis_d(begin = .3, end = .9) + ylab("Relative Frequenz") + xlab("Konstruktion") +
+  guides(fill = guide_legend(title = "Kasus")) +
+  scale_fill_viridis_d(begin = .2, end = .8) +
+  theme(axis.text = element_text(size = 18)) +
+  theme(axis.title = element_text(size = 18)) +
+  theme(strip.text = element_text(size = 18)) +
+  theme(legend.text = element_text(size = 18)) +
+  theme(legend.title = element_text(size = 18, face = "bold")) +
+  theme(text = element_text(size = 18))
+
 
 # nur Kasuskategorien mit >10 Belegen:
-qbarplot(droplevels(filter(w, keep == "y" & Position!="both" & case %in% c("gen", "gen_dat", "gen_dat_nom_akk", "nom_akk", "dat", "unclear"))), cxn, case, Position, wrap100 = T) + ylab("Relative Frequenz") + xlab("Konstruktion") +
+qbarplot(droplevels(filter(w, keep == "y" & Position!="both" & case %in% c("gen", "gen_dat", "gen_dat_nom_akk", "nom_akk", "dat", "unclear"))), cxn, Kasus, Stellung, wrap100 = T) + ylab("Relative Frequenz") + xlab("Konstruktion") +
   guides(fill = guide_legend(title = "Kasus")) +
-  scale_fill_brewer(palette = "Oranges")
-# ggsave("figures/wegen_s_kasus.png")
+  scale_fill_brewer(palette = "Oranges") +
+  theme(axis.text = element_text(size = 18)) +
+  theme(axis.title = element_text(size = 18)) +
+  theme(strip.text = element_text(size = 18)) +
+  theme(legend.text = element_text(size = 18)) +
+  theme(legend.title = element_text(size = 18, face = "bold")) +
+  theme(text = element_text(size = 18))
+# ggsave("figures/wegen_s_kasus_10plus.png", width = 12, height = 7)
 
 # einfaches Regressionsmodell Gen. vs. Dat
 m <- glmer(case ~  Position + (1 | lemma), data = filter(w, case %in% c("gen", "dat")), family = "binomial")
@@ -338,7 +450,7 @@ w$Genus <- ifelse(w$Genus=="f", "Femininum", w$Genus)
 w$Genus <- ifelse(w$Genus=="n", "Neutrum", w$Genus)
 
 # plot
-w %>% filter(Number=="sg" & Genus != "x" & position != "both") %>% qbarplot2(cxn, Genus, Position, ylab = "Relative Frequenz", xlab = "Variante", wrap100=T) + 
+w %>% filter(Number=="sg" & Genus != "x" & position != "both") %>% qbarplot2(cxn, Genus, Stellung, ylab = "Relative Frequenz", xlab = "Variante", wrap100=T) + 
   guides(fill = guide_legend(title = "Genus")) +
   scale_fill_brewer(palette = "Oranges")
   
@@ -361,15 +473,16 @@ m <- glm(stark_gem_neutr ~ cxn_factor * Position, data = w, family = "binomial")
 summary(m)
 plot(allEffects(m))
 
+
 ```
 
 ## s-lose Genitive
 
 ```{r}
 
-w %>% filter(Number=="sg" & Gender %in% c("m", "n") & klasse=="nicht_schwach" & position != "both") %>% mutate(s_los = ifelse(x_less=="y", "ja", "nein")) qbarplot(cxn, s_less, Position, wrap100 = T) + scale_fill_brewer(palette = "Oranges") +
+w %>% filter(Number=="sg" & Gender %in% c("m", "n") & klasse=="nicht_schwach" & position != "both") %>% mutate(s_los = ifelse(s_less=="y", "ja", "nein")) %>% qbarplot(cxn, s_los, Position, wrap100 = T) + scale_fill_brewer(palette = "Oranges") +
   guides(fill = guide_legend(title = "s-los")) + xlab("Konstruktion") + ylab("Relative Frequenz")
-ggsave("figures/wegen_s_s_los.png") 
+# ggsave("figures/wegen_s_s_los.png") 
 
 ```
 
@@ -413,4 +526,15 @@ w$s_typ <-  case_when(w$cxn=="wegens" & w$Gender %in% c("m", "n") & w$s_less=="y
 filter(w, cxn=="wegens") %>% mutate(s_typ = factor(s_typ, levels = c("kein s möglich", "Migration", "Dopplung"))) %>% mutate(Position = factor(position, levels = c("pre", "post"))) %>% qbarplot2(Position, s_typ) + ylab("Relative Frequenz") +
   guides(fill = guide_legend(title = "Typ")) 
 
+```
+
+## Exploration der Lemmas/Wortformen
+
+```{r}
+
+w$endet_mit_en <- grepl(".*en$", w$lemma)
+
+qbarplot(w, cxn, endet_mit_en, Position, wrap100=T)
+
+w %>% select(cxn, endet_mit_en, Position, lemma) %>% unique() %>% qbarplot(cxn, endet_mit_en, Position, wrap100=T)
 ```
